@@ -1,5 +1,29 @@
 import React, { FunctionComponent, useState } from "react";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import Select from "@material-ui/core/Select";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Checkbox from "@material-ui/core/Checkbox";
+import DateFnsUtils from "@date-io/date-fns";
+import { format } from "date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+
 import { Todo, TYPES, TodoErrorStatus } from "./todos";
+import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
 interface Props {
   todo: Partial<Todo>;
@@ -26,6 +50,12 @@ export const TodoForm: FunctionComponent<Props> = (props: Props) => {
     }
     setTodo({
       ...Object.assign(todo, { [name]: value }),
+    });
+  };
+
+  const updateTodoDateHandler = (date: any) => {
+    setTodo({
+      ...Object.assign(todo, { date: format(date, "yyyy-MM-dd") }),
     });
   };
 
@@ -75,47 +105,39 @@ export const TodoForm: FunctionComponent<Props> = (props: Props) => {
 
   return (
     <>
-      <h4>{todo.id ? "Update" : "Add"} Todo</h4>
       <form onSubmit={updateTodoHandler} noValidate>
-        <table>
-          <tbody>
-            <tr>
-              <th align="left">
-                <label htmlFor="name">Name</label>
-              </th>
-              <td>
-                <input
-                  id="name"
-                  type="text"
-                  name="name"
-                  onChange={formChangeHandler}
-                  value={todo.name}
-                  required
-                />
-              </td>
-              <td>{errors.name}</td>
-            </tr>
-            <tr>
-              <th align="left">
-                <label htmlFor="description">Description</label>
-              </th>
-              <td>
-                <textarea
-                  id="description"
-                  name="description"
-                  onChange={formChangeHandler}
-                  value={todo.description}
-                  required
-                ></textarea>
-              </td>
-              <td>{errors.description}</td>
-            </tr>
-            <tr>
-              <th align="left">
-                <label>Type</label>
-              </th>
-              <td>
-                <select
+        <Dialog open={!!todo}>
+          <DialogTitle>{todo.id ? "Update" : "Add"} Todo</DialogTitle>
+          <DialogContent>
+            <div>
+              <TextField
+                label="Name"
+                variant="filled"
+                name="name"
+                onChange={formChangeHandler}
+                value={todo.name}
+                helperText={errors.name}
+                required
+              />
+            </div>
+            <br />
+            <div>
+              <TextField
+                label="Description"
+                variant="filled"
+                name="description"
+                onChange={formChangeHandler}
+                value={todo.description}
+                helperText={errors.description}
+                required
+                multiline
+              />
+            </div>
+            <br />
+            <div>
+              <FormControl>
+                <InputLabel>Type</InputLabel>
+                <Select
                   id="type"
                   name="type"
                   onChange={formChangeHandler}
@@ -123,79 +145,72 @@ export const TodoForm: FunctionComponent<Props> = (props: Props) => {
                   required
                 >
                   {types.map((type: string) => (
-                    <option value={type} key={type}>
+                    <MenuItem value={type} key={type}>
                       {type}
-                    </option>
+                    </MenuItem>
                   ))}
-                </select>
-              </td>
-              <td>{errors.type}</td>
-            </tr>
-            <tr>
-              <th align="left">
-                <label>Confidential</label>
-              </th>
-              <td>
-                <label htmlFor="confidential1">Yes</label>
-                <input
-                  id="confidential1"
-                  type="radio"
+                </Select>
+                <FormHelperText>{errors.type}</FormHelperText>
+              </FormControl>
+            </div>
+            <br />
+            <div>
+              <FormControl>
+                <FormLabel>Confidential</FormLabel>
+                <RadioGroup
                   name="confidential"
-                  value="Yes"
+                  row
+                  value={todo.confidential}
                   onChange={formChangeHandler}
-                  checked={todo.confidential === "Yes"}
-                />
-                <label htmlFor="confidential2">No</label>
-                <input
-                  id="confidential2"
-                  type="radio"
-                  name="confidential"
-                  value="No"
-                  onChange={formChangeHandler}
-                  checked={todo.confidential === "No"}
-                />
-              </td>
-              <td></td>
-            </tr>
-            <tr>
-              <th align="left">
-                <label>Remind</label>
-              </th>
-              <td>
-                <label htmlFor="remind">Yes</label>
-                <input
-                  id="remind"
-                  type="checkbox"
-                  name="remind"
-                  onChange={formChangeHandler}
-                  checked={todo.remind}
-                />
-              </td>
-              <td></td>
-            </tr>
-            <tr>
-              <th align="left">
-                <label htmlFor="date">Date</label>
-              </th>
-              <td>
-                <input
-                  id="date"
-                  type="date"
+                >
+                  <FormControlLabel
+                    value="Yes"
+                    control={<Radio />}
+                    label="Yes"
+                    checked={todo.confidential === "Yes"}
+                  />
+                  <FormControlLabel
+                    value="No"
+                    control={<Radio />}
+                    label="No"
+                    checked={todo.confidential === "No"}
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+            <br />
+            <div>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="remind"
+                    onChange={formChangeHandler}
+                    checked={todo.remind}
+                  />
+                }
+                label="Remind"
+              />
+            </div>
+            <br />
+            <div>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
                   name="date"
-                  onChange={formChangeHandler}
+                  format="yyyy-MM-dd"
+                  label="Date"
                   value={todo.date}
+                  onChange={updateTodoDateHandler}
                   required
                 />
-              </td>
-              <td>{errors.date}</td>
-            </tr>
-            <tr>
-              <th colSpan={2} align="right">
-                <button type="submit">{todo.id ? "Update" : "Add"}</button>
-              </th>
-            </tr>
-          </tbody>
-        </table>
+              </MuiPickersUtilsProvider>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={updateTodoHandler}>
+              {todo.id ? "Update" : "Add"}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </form>
     </>
   );

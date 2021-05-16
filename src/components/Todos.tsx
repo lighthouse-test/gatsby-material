@@ -1,4 +1,11 @@
 import React, { FunctionComponent, useState } from "react";
+import Typography from "@material-ui/core/Typography";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Button from "@material-ui/core/Button";
 
 import {
   Todo,
@@ -51,9 +58,12 @@ export const Todos: FunctionComponent = () => {
 
   return (
     <>
-      <h3>
-        Todos <button onClick={addTodoHandler}>New</button>
-      </h3>
+      <Typography variant="h5" component="h3">
+        Todos
+        <Button variant="contained" color="primary" onClick={addTodoHandler}>
+          New
+        </Button>
+      </Typography>
       {currentTodo && currentEvent === "view" && (
         <TodoView todo={currentTodo} onClose={() => setCurrentEvent(null)} />
       )}
@@ -61,55 +71,61 @@ export const Todos: FunctionComponent = () => {
         <TodoForm todo={currentTodo} onAddOrUpdate={onUpdateTodoHandler} />
       )}
       <br />
-      <table width="100%">
-        <thead>
-          <tr>
-            <th align="left">Id</th>
-            <th align="left">Name</th>
-            <th align="left">description</th>
-            <th align="left">Type</th>
-            <th align="left">Confidential</th>
-            <th align="left">Remind</th>
-            <th align="left">Date</th>
-            <th align="left">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table width="100%">
+        <TableHead>
+          <TableRow>
+            <TableCell align="left">Id</TableCell>
+            <TableCell align="left">Name</TableCell>
+            <TableCell align="left">description</TableCell>
+            <TableCell align="left">Type</TableCell>
+            <TableCell align="left">Confidential</TableCell>
+            <TableCell align="left">Remind</TableCell>
+            <TableCell align="left">Date</TableCell>
+            <TableCell align="left">Actions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {todos.map((todo) => (
-            <tr key={todo.id}>
-              <td>{todo.id}</td>
-              <td>{todo.name}</td>
-              <td>{todo.description}</td>
-              <td>{todo.type}</td>
-              <td>{todo.confidential}</td>
-              <td>{todo.remind.toString()}</td>
-              <td>{todo.date}</td>
-              <td>
-                <button
+            <TableRow key={todo.id}>
+              <TableCell>{todo.id}</TableCell>
+              <TableCell>{todo.name}</TableCell>
+              <TableCell>{todo.description}</TableCell>
+              <TableCell>{todo.type}</TableCell>
+              <TableCell>{todo.confidential}</TableCell>
+              <TableCell>{todo.remind.toString()}</TableCell>
+              <TableCell>{todo.date}</TableCell>
+              <TableCell>
+                <Button
+                  variant="contained"
+                  color="primary"
                   type="button"
                   onClick={() => selectTodoHandler(todo.id, "view")}
                 >
                   View
-                </button>
+                </Button>
                 &nbsp;
-                <button
+                <Button
+                  variant="contained"
+                  color="primary"
                   type="button"
                   onClick={() => selectTodoHandler(todo.id, "edit")}
                 >
                   Edit
-                </button>
+                </Button>
                 &nbsp;
-                <button
+                <Button
+                  variant="contained"
+                  color="secondary"
                   type="button"
                   onClick={() => deleteTodoHandler(todo.id)}
                 >
                   Delete
-                </button>
-              </td>
-            </tr>
+                </Button>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </>
   );
 };

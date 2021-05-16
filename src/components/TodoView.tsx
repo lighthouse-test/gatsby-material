@@ -1,4 +1,11 @@
 import React, { FunctionComponent, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 import { Todo } from "./todos";
 
 interface Props {
@@ -13,44 +20,55 @@ export const TodoForm: FunctionComponent<Props> = (props: Props) => {
     props.onClose();
   };
 
+  const useStyles = makeStyles({
+    root: {
+      minWidth: 275,
+    },
+    bullet: {
+      display: "inline-block",
+      margin: "0 2px",
+      transform: "scale(0.8)",
+    },
+    title: {
+      fontSize: 14,
+    },
+    pos: {
+      marginBottom: 12,
+    },
+  });
+
+  const classes = useStyles();
+
   return (
     <>
-      <h4>Todo</h4>
-      <table>
-        <tbody>
-          <tr>
-            <th align="left">Name</th>
-            <td>{todo.name}</td>
-          </tr>
-          <tr>
-            <th align="left">Description</th>
-            <td>{todo.description}</td>
-          </tr>
-          <tr>
-            <th align="left">Type</th>
-            <td>{todo.type}</td>
-          </tr>
-          <tr>
-            <th align="left">Confidential</th>
-            <td>{todo.confidential}</td>
-          </tr>
-          <tr>
-            <th align="left">Remind</th>
-            <td>{todo.remind?.toString()}</td>
-          </tr>
-          <tr>
-            <th align="left">Date</th>
-            <td>{todo.date}</td>
-          </tr>
-          <tr>
-            <th colSpan={2} align="right">
-              <button type="button" onClick={closeTodoHandler}>
-                Close
-              </button>
-            </th>
-          </tr>
-        </tbody>
-      </table>
+      <Card className={classes.root}>
+        <CardContent>
+          <Typography variant="h4">Todo</Typography>
+          <Divider />
+          <br />
+          <dl>
+            <dt>Name</dt>
+            <dd>{todo.name}</dd>
+            <dt>Description</dt>
+            <dd>{todo.description}</dd>
+            <dt>Type</dt>
+            <dd>{todo.type}</dd>
+            <dt>Confidential</dt>
+            <dd>{todo.confidential}</dd>
+            <dt>Remind</dt>
+            <dd>{todo.remind}</dd>
+            <dt>Date</dt>
+            <dd>{todo.date}</dd>
+          </dl>
+          <br />
+          <Divider />
+        </CardContent>
+        <CardActions>
+          <Button type="button" onClick={closeTodoHandler}>
+            Close
+          </Button>
+        </CardActions>
+      </Card>
     </>
   );
 };
