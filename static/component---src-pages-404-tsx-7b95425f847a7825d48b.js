@@ -1,0 +1,2 @@
+(self.webpackChunk_lighthouse_test_gatsby_material=self.webpackChunk_lighthouse_test_gatsby_material||[]).push([[218],{938:function(e,t,s){"use strict";s.r(t),s.d(t,{Index:function(){return i}});var a=s(7294),n=s(453),i=function(){return a.createElement(n.Z,{variant:"h2"},"Seems like this page doesn't exist :(")};t.default=i}}]);
+//# sourceMappingURL=component---src-pages-404-tsx-7b95425f847a7825d48b.js.map
